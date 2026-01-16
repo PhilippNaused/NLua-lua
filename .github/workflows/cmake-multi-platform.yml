@@ -23,11 +23,6 @@ jobs:
           - macos-latest
           - windows-latest
           - windows-11-arm
-        args:
-          - ""
-        include:
-          - os: windows-latest
-            args: "-DCMAKE_GENERATOR_PLATFORM=Win32 -A Win32" # 32-bit Windows
 
     steps:
     - uses: actions/checkout@v6
@@ -43,7 +38,6 @@ jobs:
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_BUILD_TYPE=${{ env.BuildType }}
         -S ${{ github.workspace }}
-        ${{ matrix.args }}
 
     - name: Build
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ env.BuildType }}
