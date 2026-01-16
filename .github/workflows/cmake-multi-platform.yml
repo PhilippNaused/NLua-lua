@@ -22,11 +22,13 @@ jobs:
           - windows-11-arm
         build_type: 
           - Release
+        args:
+          - ""
         include:
           - os: windows-latest
-            args: -DCMAKE_GENERATOR_PLATFORM=Win32 -A Win32
+            args: "-DCMAKE_GENERATOR_PLATFORM=Win32 -A Win32"
           - os: windows-latest
-            args: -DCMAKE_GENERATOR_PLATFORM=x64 -A x64
+            args: "-DCMAKE_GENERATOR_PLATFORM=x64 -A x64"
 
     steps:
     - uses: actions/checkout@v6
@@ -42,9 +44,10 @@ jobs:
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -S ${{ github.workspace }}
+        ${{ matrix.args }}
 
     - name: Build
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }} ${{ matrix.args }}
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
