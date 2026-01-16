@@ -32,13 +32,11 @@ jobs:
       uses: threeal/cmake-action@v2.1.0
       with:
         source-dir: ${{ github.workspace }}
-        build-dir: build
         options: CMAKE_BUILD_TYPE=${{ env.BuildType }}
         build-args: --config ${{ env.BuildType }}
 
     - name: 🧪 Test
       uses: threeal/ctest-action@v1.1.0
       with:
-        test-dir: build
         build-config: ${{ env.BuildType }}
         verbose: true
