@@ -1,0 +1,42 @@
+name: CMake on multiple platforms
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  BuildType: Release
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        os:
+          - ubuntu-latest
+          - ubuntu-24.04-arm
+          - macos-latest
+          - windows-latest
+          - windows-11-arm
+
+    steps:
+    - name: ⤵️ Checkout
+      uses: actions/checkout@v6
+
+    - name: 🔨 Build
+      uses: threeal/cmake-action@v2.1.0
+      with:
+        source-dir: ${{ github.workspace }}
+        options: CMAKE_BUILD_TYPE=${{ env.BuildType }}
+        build-args: --config ${{ env.BuildType }}
+
+    - name: 🧪 Test
+      uses: threeal/ctest-action@v1.1.0
+      with:
+        build-config: ${{ env.BuildType }}
+        verbose: true
