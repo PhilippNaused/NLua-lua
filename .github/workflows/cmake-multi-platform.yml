@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  BuildType: Release
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -20,15 +23,11 @@ jobs:
           - macos-latest
           - windows-latest
           - windows-11-arm
-        build_type: 
-          - Release
         args:
           - ""
         include:
           - os: windows-latest
-            args: "-DCMAKE_GENERATOR_PLATFORM=Win32 -A Win32"
-          - os: windows-latest
-            args: "-DCMAKE_GENERATOR_PLATFORM=x64 -A x64"
+            args: "-DCMAKE_GENERATOR_PLATFORM=Win32 -A Win32" # 32-bit Windows
 
     steps:
     - uses: actions/checkout@v6
@@ -42,13 +41,13 @@ jobs:
     - name: Configure
       run: >
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DCMAKE_BUILD_TYPE=${{ env.BuildType }}
         -S ${{ github.workspace }}
         ${{ matrix.args }}
 
     - name: Build
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ env.BuildType }}
 
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      run: ctest --build-config ${{ matrix.build_type }} --verbose
+      run: ctest --build-config ${{ env.BuildType }} --verbose
