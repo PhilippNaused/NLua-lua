@@ -12,6 +12,8 @@ win-arm/
 ios_build/ios
 ios_build/tvos
 ios_build/watchos
+linux-x64/
+linux-arm64/
 osx-64
 osx-arm64
 osx
